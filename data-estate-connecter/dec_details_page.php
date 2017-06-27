@@ -8,7 +8,7 @@
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>Options Key</th>
+<!-- 				<th>Options Key</th> -->
 				<th>Type</th>
 				<th>Description</th>
 				<th>Value/Validation</th>
@@ -17,8 +17,8 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th scope="row">APIURL</th>
-				<td>dec-api-url</td>
+				<th scope="row">API URL</th>
+<!-- 				<td>dec-api-url</td> -->
 				<td>text</td>
 				<td>Data Estate API’s URL. The URL usually doesn’t need changing and can stay as the default value. Only change this when you’re switching to a separate environment (such as UAT, development or your own custom instance).</td>
 				<td>Valid uri includingprotocol.REQUIRED</td>
@@ -26,20 +26,36 @@
 			</tr>
 			<tr>
 				<th scope="row">API Key</th>
-				<td>dec-api-key</td>
+<!-- 				<td>dec-api-key</td> -->
 				<td>text</td>
 				<td>A valid Data Estate API Key. If you wish to access ATDW’s Tourism Content,you will need to register for a Data Estate account with a valid ATDW API Key.</td>
 				<td>REQUIRED</td>
 				<td></td>
 			</tr>
 			<tr>
+				<th scope="row">End Point</th>
+<!-- 				<td>dec-api-endpoint</td> -->
+				<td>text</td>
+				<td>The main <strong>Estate</strong> endpoint to use. Usually this is going to be estates/data/ so it's best to just leave it untouched. </td>
+				<td>REQUIRED</td>
+				<td>estates/data/</td>
+			</tr>
+			<tr>
+				<th scope="row">Google Maps API key</th>
+<!-- 				<td>dec-api-endpoint</td> -->
+				<td>text</td>
+				<td>A valid Google Map API key is needed, if you wish to use the Map widget.</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<!-- <tr>
 				<th scope="row">Shortcode Prefix</th>
 				<td>dec-api-key</td>
 				<td>text</td>
 				<td>A valid Data Estate API Key. If you wish to access ATDW’s Tourism Content,you will need to register for a Data Estate account with a valid ATDW API Key.</td>
 				<td>REQUIRED</td>
 				<td></td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
 	<div class="headline_api_detail">
