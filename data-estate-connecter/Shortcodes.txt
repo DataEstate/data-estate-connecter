@@ -1,0 +1,19 @@
+1 .[dec-name]
+
+2. [dec-description]
+
+3. [dec-address type=PHYSICAL get=post_code,state]
+
+4. [dec-attributes type=ACCREDITN get=description,id,type]
+
+5. [dec-phone index=2 get=number,country_name,country_code,calling_code]
+
+6. [dec-email index=0 get=address]
+
+7. [dec-url index=0 get=address]
+
+8. [dec-images index=3]
+
+9. [dec-classifications type=BEDBREAKFA get=description,type]
+
+10.[dec-category]

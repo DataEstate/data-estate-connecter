@@ -1,0 +1,17 @@
+/*
+	 Plugin Name: Js-Dropdown-List	 
+ 
+*/
+#country_name { display:block; }
+#country_district {
+  display: block;
+  margin: 0;
+}
+#country_zipcode {
+  display: block;
+  margin: 0;
+}  
+.chack-boxs {
+  float: left;
+  margin-right: 30px;
+}
