@@ -8,7 +8,7 @@ There is currently no official plugin download page, and this plugin is not avai
 ## Configuration
 After activation, some configurations are needed before the plugin can be used. Details of it can be seen in the settings page. Settings can be found under **Settings->DEC Config**
 
-|*Name	| Type	| Description	| Value/Validation	| Default |
+|Name	| Type	| Description	| Value/Validation	| Default |
 |-------|-------|-------------|-------------------|---------|
 |API URL |	text |	Data Estate API’s URL. The URL usually doesn’t need changing and can stay as the default value. Only change this when you’re switching to a separate environment (such as UAT, development or your own custom instance). | Valid uri includingprotocol.REQUIRED	| http://api.dataestate.net/v1/|
 |API Key |	text |	A valid Data Estate API Key. If you wish to access ATDW’s Tourism Content,you will need to register for a Data Estate account with a valid ATDW API Key.|	REQUIRED	|
