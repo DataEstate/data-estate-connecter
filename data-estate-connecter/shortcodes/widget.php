@@ -96,8 +96,10 @@ function dec_map_widget($atts, $content=null) {
 		$sw= ($scrollWheel || $scrollWheel =="true") ? "true" : "false";
 		$api_url = $api_info[0]["api_base_url"].'/'.$api_info[0]["api_end_point"];
 		$api_key = $api_info[0]["api_key"];
-		$map_script="var api_url=\"".$api_url."\";
-			function initMap() {
+		$map_script="
+		function initMap() {
+				var api_url=\"".$api_url."\";
+				console.log(api_url);
 				$ = jQuery.noConflict();
 				var center= {lat:".$lat.", lng:".$lng."};
 				var map = new google.maps.Map(document.getElementById('map'), {
@@ -108,21 +110,21 @@ function dec_map_widget($atts, $content=null) {
 				var q = {
 					\"api_key\":\"".$api_key."\",";
 		if (!is_null($categories)) {
-			$map_script.="\"categories: \"".$categories."\",";
+			$map_script.="\"categories\":\"".$categories."\",";
 		}
 		if (!is_null($localities)) {
-			$map_script.="\"localities: \"".$localities."\",";
+			$map_script.="\"localities\":\"".$localities."\",";
 		}
 		if (!is_null($states)) {
-			$map_script.="\"states: \"".$states."\",";
+			$map_script.="\"states\":\"".$states."\",";
 		}
 		if (!is_null($areas)) {
-			$map_script.="\"areas: \"".$areas."\",";
+			$map_script.="\"areas\":\"".$areas."\",";
 		}
 		if (!is_null($regions)) {
-			$map_script.="\"regions: \"".$regions."\",";
+			$map_script.="\"regions\":\"".$regions."\",";
 		}
-			$map_script.="\"fields\": \"id,name,category_code,category,geo_location,description,addresses.PHYSICAL,images,latest_date\", 
+			$map_script.="\"fields\":\"id,name,category_code,category,geo_location,description,addresses.PHYSICAL,images,latest_date\", 
 					\"size\": ".$size.", 
 					\"near\": \"".$lat.",".$lng."\",
 					\"max_km\": ".$radius."
@@ -130,10 +132,9 @@ function dec_map_widget($atts, $content=null) {
 				var markers=[];
 				var image_path = \"http://warehouse.dataestate.com.au/DE/images/map/\";
 				var info_window = new google.maps.InfoWindow();
-
 				$.get(api_url, q)
 					.done(function(response) {
-						$.each(response, function(i, item) {
+						jQuery.each(response, function(i, item) {
 							if (item.geo_location.coordinates !== undefined) {
 								var coordinates = item.geo_location.coordinates
 								var icon = {
@@ -205,51 +206,54 @@ function dec_map_widget($atts, $content=null) {
 						};
 						var markerClusters=new MarkerClusterer(map, markers, 
 							{
-								\"styles\":[{
-									\"url\": image_path+\"CLUSTER/M1.png\", 
-									\"height\": clusterOption.height, 
-									\"width\": clusterOption.width, 
-									\"iconAnchor\": clusterOption.iconAnchor, 
-									\"textSize\": clusterOption.textSize, 
-									\"anchor\": clusterOption.anchor, 
-									\"textColor\": clusterOption.textColor
-								}, 
-								{
-									\"url\": image_path+\"CLUSTER/M2.png\", 
-									\"height\": clusterOption.height, 
-									\"width\": clusterOption.width, 
-									\"iconAnchor\": clusterOption.iconAnchor, 
-									\"textSize\": clusterOption.textSize, 
-									\"anchor\": clusterOption.anchor, 
-									\"textColor\": clusterOption.textColor
-								}, 
-								{
-									\"url\": image_path+\"CLUSTER/M3.png\", 
-									\"height\": clusterOption.height, 
-									\"width\": clusterOption.width, 
-									\"iconAnchor\": clusterOption.iconAnchor, 
-									\"textSize\": clusterOption.textSize, 
-									\"anchor\": clusterOption.anchor, 
-									\"textColor\": clusterOption.textColor
-								}, 
-								{
-									\"url\": image_path+\"CLUSTER/M4.png\", 
-									\"height\": clusterOption.height, 
-									\"width\": clusterOption.width, 
-									\"iconAnchor\": clusterOption.iconAnchor, 
-									\"textSize\": clusterOption.textSize, 
-									\"anchor\": clusterOption.anchor, 
-									\"textColor\": clusterOption.textColor
-								}, 
-								{
-									\"url\": image_path+\"CLUSTER/M5.png\", 
-									\"height\": clusterOption.height, 
-									\"width\": clusterOption.width, 
-									\"iconAnchor\": clusterOption.iconAnchor, 
-									\"textSize\": clusterOption.textSize, 
-									\"anchor\": clusterOption.anchor, 
-									\"textColor\": clusterOption.textColor
-								}]
+								\"styles\":[
+									{
+										\"url\": image_path+\"CLUSTER/M1.png\", 
+										\"height\": clusterOption.height, 
+										\"width\": clusterOption.width, 
+										\"iconAnchor\": clusterOption.iconAnchor, 
+										\"textSize\": clusterOption.textSize, 
+										\"anchor\": clusterOption.anchor, 
+										\"textColor\": clusterOption.textColor
+									}, 
+									{
+										\"url\": image_path+\"CLUSTER/M2.png\", 
+										\"height\": clusterOption.height, 
+										\"width\": clusterOption.width, 
+										\"iconAnchor\": clusterOption.iconAnchor, 
+										\"textSize\": clusterOption.textSize, 
+										\"anchor\": clusterOption.anchor, 
+										\"textColor\": clusterOption.textColor
+									}, 
+									{
+										\"url\": image_path+\"CLUSTER/M3.png\", 
+										\"height\": clusterOption.height, 
+										\"width\": clusterOption.width, 
+										\"iconAnchor\": clusterOption.iconAnchor, 
+										\"textSize\": clusterOption.textSize, 
+										\"anchor\": clusterOption.anchor, 
+										\"textColor\": clusterOption.textColor
+									}, 
+									{
+										\"url\": image_path+\"CLUSTER/M4.png\", 
+										\"height\": clusterOption.height, 
+										\"width\": clusterOption.width, 
+										\"iconAnchor\": clusterOption.iconAnchor, 
+										\"textSize\": clusterOption.textSize, 
+										\"anchor\": clusterOption.anchor, 
+										\"textColor\": clusterOption.textColor
+									}, 
+									{
+										\"url\": image_path+\"CLUSTER/M5.png\", 
+										\"height\": clusterOption.height, 
+										\"width\": clusterOption.width, 
+										\"iconAnchor\": clusterOption.iconAnchor, 
+										\"textSize\": clusterOption.textSize, 
+										\"anchor\": clusterOption.anchor, 
+										\"textColor\": clusterOption.textColor
+									}
+									],
+								\"maxZoom\":18
 							}
 						);
 				});
