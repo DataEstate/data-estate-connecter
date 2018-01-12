@@ -5,7 +5,7 @@ Plugin Name: Data Estate Connecter
 Description: The Data Estate Connecter (DEC) plugin integrates your WordPress site with the Data Estate API gain access to various Estate content. The API supports accessing ATDW’s tourism data as long as you have a valid ATDW distributor API Key.
 Author: Data Estate
 Author URI: http://www.dataestate.com.au
-Version: 1.5.5
+Version: 1.5.8
 License:           GPL-2.0+
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -101,7 +101,9 @@ function register_google_map() {
 function register_material_font() {
 	wp_register_style('google-material-font', 'https://fonts.googleapis.com/icon?family=Material+Icons');
 }
-
+/******Styles******/
+wp_register_style( 'shortcode-style', DEC_URL . '/css/shortcode-style.css' );
+wp_enqueue_style( 'shortcode-style' );
 /******Actions*****/
 add_action('admin_menu', 'my_plugin_menu' );
 add_action('wp_enqueue_scripts', 'register_search_widget');
@@ -132,9 +134,12 @@ add_shortcode('atdw-beacon', 'atdw_beacon');
 /** Widget related shortcodes **/
 add_shortcode('dec-widget', 'dec_widget');
 add_shortcode('dec-map-widget', 'dec_map_widget');
+add_shortcode('dec-assets', 'dec_assets');
+add_shortcode('dec-estates', 'dec_estates');
+add_shortcode('dec-awarded-estates', 'dec_awarded_estates');
+add_shortcode('dec-condition', 'dec_condition');
 // add_shortcode('dec-search-categories', 'dec_search_cats');
+require_once 'de_api.php';
 require_once 'functions.php';
-
-
 
 

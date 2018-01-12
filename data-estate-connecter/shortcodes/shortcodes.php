@@ -69,7 +69,7 @@ function dec_address($atts, $content = null){
 
 /***Shortcode For Attributes ****/
 function dec_attributes($atts, $content = null){
-	extract(shortcode_atts(array('attributes'=>'attributes','index'=>'', 'type'=>'','get'=>''), $atts));
+	extract(shortcode_atts(array('attributes'=>'attributes','index'=>'', 'type'=>'','get'=>'', 'as'=>'text'), $atts));
 	global $api_arry;
 	$error= api_error_function();
 	if($error){
@@ -98,12 +98,21 @@ function dec_attributes($atts, $content = null){
 		//Check Index
 		if ($index == '') {
 			$result_string="<ul class='dec-attributes'>";
+			$string_format='<li>%s</li>';
+			if ($as=='class') {
+				$string_format='<li><div class="de-badge de-tourismorgs key-%s"><span class="badge-text">%s</span></div></li>';
+			}
 			foreach ($attrs as $attr) {
 				$get_string = "";
 				foreach ($get_array as $val) {
 					$get_string.=$attr->$val.' ';
 				}
-				$result_string.="<li>".$get_string."</li>";
+				if ($as=='class') {
+					$result_string.=sprintf($string_format, $attr->id, $attr->description);
+				}
+				else {
+					$result_string.=sprintf($string_format, $get_string);
+				}
 			}
 			$result_string.="</ul>";
 			return $result_string;
@@ -117,6 +126,7 @@ function dec_attributes($atts, $content = null){
 		}
 	}
 }
+
 function dec_rate($atts, $content=null) {
 	extract(shortcode_atts(array('rate'=>'rate','type'=>'from'), $atts));
 	global $api_arry;
@@ -414,7 +424,6 @@ function dec_location($atts, $content = null) {
 	extract(shortcode_atts(array('width'=>'100%', 'height'=>'100%', 'zoom'=>8, 'scrollwheel'=>false), $atts));
 	global $api_arry;
 	$error=api_error_function();
-
 	if ($error) {
 		return $error;
 	}
@@ -423,21 +432,26 @@ function dec_location($atts, $content = null) {
 		$sw= ($scrollWheel || $scrollWheel =="true") ? "true" : "false";
 		$address = $api_arry->{'addresses'}->{'PHYSICAL'};
 		$name = $api_arry->{'name'};
-		$map_script = "var map; 
-			var eLatLng = {lat:".$address->{'geocode'}->{'lat'}.", lng: ".$address->{'geocode'}->{'lng'}."};
-			function initMap() { 
-				map = new google.maps.Map(document.getElementById('map'), {
-					center: eLatLng, zoom: ".$zoom.", 
-					scrollwheel: ".$sw."
-				});
-				var marker = new google.maps.Marker({
-					position: eLatLng, 
-					map: map,
-					title: '".addslashes($name)."'
-				});
-			}";
-		$map_div="<div id='map' style='width:".$width.";height:".$height."'></div>";
-		return $map_div."<script>".$map_script."</script>";
+		if (isset($address->{'geocode'})) {
+			$map_script = "var map; 
+				var eLatLng = {lat:".$address->{'geocode'}->{'lat'}.", lng: ".$address->{'geocode'}->{'lng'}."};
+				function initMap() { 
+					map = new google.maps.Map(document.getElementById('map'), {
+						center: eLatLng, zoom: ".$zoom.", 
+						scrollwheel: ".$sw."
+					});
+					var marker = new google.maps.Marker({
+						position: eLatLng, 
+						map: map,
+						title: '".addslashes($name)."'
+					});
+				}";
+			$map_div="<div id='map' style='width:".$width.";height:".$height."'></div>";
+			return $map_div."<script>".$map_script."</script>";
+		}
+		else {
+			return "<script>function initMap() { console.log('No geocodes found')</script>";
+		}
 	}
 }
 
@@ -523,16 +537,28 @@ function dec_txa_button($atts,$content=null) {
 
 }
 function dec_event_date($atts, $content=null) {
-	extract(shortcode_atts(array('format'=>'l, jS F Y'), $atts));
+	extract(shortcode_atts(array('format'=>'l, jS F Y', 'asEndDate'=>'false'), $atts));
 	global $api_arry;
 	$error= api_error_function();
 	if($error){
 		return $error;
 	}
 	else {
+		if ($asEndDate!='false') {
+			if (isset($api_arry->{'latest_end_date'})) {
+				$date = new DateTime($api_arry->{'latest_end_date'});
+				return $date->format($format);
+			}
+			else {
+				return '';
+			}
+		}
 		if (isset($api_arry->{'latest_date'})) {
 			$date = new DateTime($api_arry->{'latest_date'});
 			return $date->format($format);
+		}
+		else {
+			return '';
 		}
 	}
 }

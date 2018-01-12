@@ -1,0 +1,19 @@
+.de-award-year,
+.de-award-category,
+.award-category,
+.award-name {
+  display: inline-block;
+}
+.de-award-category {
+  font-weight: bold;
+}
+.de-description-group {
+  margin-bottom: 20px;
+}
+.de-award-year, .de-award-category {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+.award-category {
+  margin-right: 10px;
+}

@@ -21,6 +21,7 @@ function dec_widget($atts, $content = null){
 		"txa_widget"=>false, 
 		"class_name"=>"",
 		"sort"=>"name",
+		"badges"=>"",
 		"enquire_url"=>null), $atts);
 	$attr_map = [
 		'autoload'=>autoload,
@@ -37,6 +38,7 @@ function dec_widget($atts, $content = null){
 		"txa_widget"=>"txa_widget",
 		"class_name"=>"class_name",
 		"sort"=>"default_sort",
+		"badges"=>"badges",
 		"enquire_url"=>"enquire_link"
 	];
 	$error= api_error_function();
@@ -262,8 +264,194 @@ function dec_map_widget($atts, $content=null) {
 		return $map_div."<script>".$map_script."</script>";
 	}
 }
+//Enclosing shortcode
+function dec_assets($atts, $content=null) {
+	extract(shortcode_atts(['fields'=>'', 'size'=>20,'sort'=>'name','types'=>'', 'template_keys'=>'name'], $atts));
+	$deApi = De_api::get_instance();
+	$queryParams=[];
+	foreach ($atts as $aKey => $aVal) {
+		if ($aVal !='' && $aKey !='template_keys') {
+			$queryParams[$aKey]=$aVal;
+		}
+	}
+	$deAssets = $deApi->assets($queryParams);
+	$templateKeys=explode(",", $template_keys);
+	$resultString='<div class="de-assets">';
+	//Build content template
+	foreach ($deAssets as $asset) {
+		$varArray=[];
+		foreach ($templateKeys as $key) {
+			$key = str_replace("$", "", $key);
+			if (isset($asset->$key)) {
+				$varArray[]=$asset->$key;
+			}
+			else {
+				$varArray[]="";
+			}
+		}
+		$resultString .= str_replace($templateKeys, $varArray, $content);
+		//$assetString.='<li>'.$asset->{'name'}..'</li>';
+	}
+	$resultString.='</div>';
+	return $resultString;
+}
+//Enclosing shortcode
+function dec_estates($atts, $content=null) {
+	extract(shortcode_atts(['fields'=>'', 'size'=>20,'sort'=>'name','category_code'=>'',
+	'template_keys'=>'name', 'award_description'=>'', 'states'=>'', 'areas'=>'', 'regions'=>'',
+	 'categories'=>'', 'localities'=>'', 'atap'=>'', 'subtypes'=>'', 'att_types'=>'', 
+	'attributes'=>'', 'sort'=>''], $atts));
+	$deApi = De_api::get_instance();
+	$queryParams=[];
+	foreach ($atts as $aKey => $aVal) {
+		if ($aVal !='' && $aKey !='template_keys') {
+			$queryParams[$aKey]=$aVal;
+		}
+	}
+	$deEstates = $deApi->estates($queryParams);
+	$templateKeys=explode(",", $template_keys);
+	$resultString.='<div class="de-estates">';
+	//Build content template
+	foreach ($deEstates as $asset) {
+		$varArray=[];
+		foreach ($templateKeys as $key) {
+			$key = str_replace("$", "", $key);
+			if (isset($asset->$key)) {
+				$varArray[]=$asset->$key;
+			}
+			else {
+				$varArray[]="";
+			}
+		}
+		$resultString .= str_replace($templateKeys, $varArray, $content);
+	}
+	$resultString.='</div>';
+	return $resultString;
+}
 
+function dec_awarded_estates($atts, $content=null) {
+	extract(shortcode_atts([
+		'fields'=>'', 'award'=>'Australian Tourism Awards',
+		'year'=>'', 'description'=>'', 'category'=>'', 'states'=>'',
+		'categories'=>'', 'template_keys'=>'', 'shortcode_content'=>'false', 'size'=>'', 'pg'=>'1'
+	], $atts));
+	$deApi = De_api::get_instance();
+	$queryParams=[];
+	foreach ($atts as $aKey => $aVal) {
+		if ($aVal !='' && !in_array($aKey, ['template_keys', 'shortcode_content'])) {
+			$queryParams[$aKey]=$aVal;
+		}
+	}
+	$deAwardGroups = $deApi->estates($queryParams, null, 'winners');
+	$templateKeys=explode(",", $template_keys);
+	$resultString.='<div class="de-award-group">';
+	//Award Group
+	foreach ($deAwardGroups as $awardGroup) {
+		if (isset($awardGroup->name)) {
+				$resultString.='<h3 class="de-award-name">'.$awardGroup->name.'</h3>';
+		}
+		$resultString.='<div class="de-description-group">';
+		if (isset($awardGroup->description) || isset($awardGroup->year)) {
+			$resultString.='<div class="de-award-details">';
+			if (isset($awardGroup->year)) {
+				$resultString.='<span class="de-award-year">'.$awardGroup->year.'</span>';
+			}
+			if (isset($awardGroup->description)) {
+				$resultString.='<span class="de-award-category">'.$awardGroup->description.'</span>';
+			}
+			$resultString.='</div>';
+		}
+		if (isset($awardGroup->estates)) {
+			foreach ($awardGroup->estates as $estate) {
+				$varArray=[];
+				foreach ($templateKeys as $key) {
+					$key = str_replace("$", "", $key);
+					//Split into sections
+					$keyParts = explode(".", $key);
+					$val = (array)$estate;
+					foreach ($keyParts as $keyPart) {
+						if (is_array($val)) {
+							if (isset($val[$keyPart])) {
+								$val = $val[$keyPart];
+								if (is_object($val)) {
+									$val=(array)$val;
+								}
+							}
+							else {
+								$val="";
+							}
+						}
+					}
+					$varArray[] = $val;
+				}
+				$resultString .= str_replace($templateKeys, $varArray, $content);
+			}
+		}
+		$resultString.='</div>';
+	}
+	$resultString.='</div>';
+	if ($shortcode_content=='false' || $shortcode_content=='') {
+		return $resultString;
+	}
+	else {
+		return do_shortcode($resultString);
+	}
+}
 
+function dec_condition($atts, $content=null) {
+	extract(
+		shortcode_atts([
+			'if'=>'', 'target'=>''
+		], $atts)
+	);
+	switch ($target) {
+		case '':
+			if (eval_condition($if)) {
+				return $content;
+			}
+			else {
+				return "";
+			}
+			break;
+		case 'estate':
+			global $api_arry;
+			if (get_field($api_arry, $if)=="") {
+				return "";
+			}
+			else {
+				return $content;
+			}
+			break;
+			//$if is an estate field in this. 
+	}
+}
+
+function eval_condition($conditionString) {
+	if ($conditionString== "") {
+		return false;
+	}
+	$functionString = "return (".$conditionString.");";
+	return eval($functionString);
+}
+
+//Get PATH, TODO: Helper
+function get_field($object=[], $pathString="", $default="") {
+	$keyParts = explode(".", $pathString);
+	$val = (array)$object; //Use Array if object
+	foreach ($keyParts as $keyPart) {
+		if (is_array($val)) {
+			if (isset($val[$keyPart])) {
+				$val = $val[$keyPart];
+				if (is_object($val)) {
+					$val=(array)$val;
+				}
+			}
+			else {
+				$val=$default; //If not found, return default
+			}
+		}
+	}
+}
 
 
 
