@@ -587,7 +587,17 @@ function dec_event_date($atts, $content=null) {
 			$result_string="<ul class='dec-date'>";
 			foreach ($api_arry->{'info'}->{'dates'} as $event_date) {
 				$sdate = new DateTime($event_date->{'start_time'});
-				$result_string.= '<li>'.$sdate->format($format).'</li>';
+				$edate = new DateTime($event_date->{'end_time'});
+				$stime_format = $sdate->format("H:i");
+				$etime_format = $edate->format("H:i");
+				if ($stime_format == "00:00" && $etime_format == "00:00") {
+					$sdate_str = $sdate->format("D, d/m/y");
+					$edate_str = $edate->format("D, d/m/y");
+				} else {
+					$sdate_str = $sdate->format($format);
+					$edate_str = $edate->format($format);
+				}
+				$result_string.= '<li>'.$sdate_str.' - '.$edate_str.'</li>';
 			}
 			$result_string.="</ul>";
 			return $result_string;
