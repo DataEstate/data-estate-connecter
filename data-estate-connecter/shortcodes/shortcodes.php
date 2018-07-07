@@ -578,6 +578,7 @@ function dec_txa_button($atts,$content=null) {
 function dec_event_date($atts, $content=null) {
 	extract(shortcode_atts(array('type' => 'list','format'=>'l, jS F Y', 'asEndDate'=>'false'), $atts));
 	global $api_arry;
+	$date_default_format = "D, d/m/y";
 	$error= api_error_function();
 	if($error){
 		return $error;
@@ -588,11 +589,11 @@ function dec_event_date($atts, $content=null) {
 			foreach ($api_arry->{'info'}->{'dates'} as $event_date) {
 				$sdate = new DateTime($event_date->{'start_time'});
 				$edate = new DateTime($event_date->{'end_time'});
-				$stime_format = $sdate->format("H:i");
-				$etime_format = $edate->format("H:i");
-				if ($stime_format == "00:00" && $etime_format == "00:00") {
-					$sdate_str = $sdate->format("D, d/m/y");
-					$edate_str = $edate->format("D, d/m/y");
+				$stime_formatted = $sdate->format("H:i");
+				$etime_formatted = $edate->format("H:i");
+				if ($stime_formatted == "00:00" && $etime_formatted == "00:00") {
+					$sdate_str = $sdate->format($date_default_format);
+					$edate_str = $edate->format($date_default_format);
 				} else {
 					$sdate_str = $sdate->format($format);
 					$edate_str = $edate->format($format);
