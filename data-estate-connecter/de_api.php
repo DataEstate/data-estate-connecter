@@ -52,27 +52,6 @@ class De_api {
 		return json_decode($response);
 	}
 
-	public function create_asset($params=[], $estate_id) {
-		$endpoint='/assets/data';
-		$url = $this->_apiUrl.$endpoint;
-
-		if (!is_null($this->_apiKey)) {
-			$url.='?api_key='.$this->_apiKey;
-			if (count($params) > 0) {
-				$url.='&'.http_build_query($params);
-			}
-		}
-		else {
-			if (count($params) > 0) {
-				$url.='?'.http_build_query($params);
-			}
-		}
-		$url.= "&estate_id=".$estate_id;
-
-		return $url;
-	}
-
-
 	public function assets($params=[], $id=null, $header=false) {
 		$endpoint='/assets/data';
 		$url = $this->_apiUrl.$endpoint;
