@@ -576,28 +576,48 @@ function dec_txa_button($atts,$content=null) {
 
 /***Shortcode For Event Date  ****/
 function dec_event_date($atts, $content=null) {
-	extract(shortcode_atts(array('format'=>'l, jS F Y', 'asEndDate'=>'false'), $atts));
+	extract(shortcode_atts(array('type' => 'list','format'=>'l, jS F Y', 'asEndDate'=>'false'), $atts));
 	global $api_arry;
+	$date_default_format = "D, d/m/y";
 	$error= api_error_function();
 	if($error){
 		return $error;
 	}
 	else {
-		if ($asEndDate!='false') {
-			if (isset($api_arry->{'latest_end_date'})) {
-				$date = new DateTime($api_arry->{'latest_end_date'});
-				return $date->format($format);
+		if ($type == 'list') {
+			$result_string="<ul class='dec-date'>";
+			foreach ($api_arry->{'info'}->{'dates'} as $event_date) {
+				$sdate = new DateTime($event_date->{'start_time'});
+				$edate = new DateTime($event_date->{'end_time'});
+				$stime_formatted = $sdate->format("H:i");
+				$etime_formatted = $edate->format("H:i");
+				if ($stime_formatted == "00:00" && $etime_formatted == "00:00") {
+					$sdate_str = $sdate->format($date_default_format);
+					$edate_str = $edate->format($date_default_format);
+				} else {
+					$sdate_str = $sdate->format($format);
+					$edate_str = $edate->format($format);
+				}
+				$result_string.= '<li>'.$sdate_str.' - '.$edate_str.'</li>';
 			}
-			else {
+			$result_string.="</ul>";
+			return $result_string;
+		} else {
+			if ($asEndDate!='false') {
+				if (isset($api_arry->{'latest_end_date'})) {
+					$date = new DateTime($api_arry->{'latest_end_date'});
+					return $date->format($format);
+				}
+				else {
+					return '';
+				}
+			}
+			if (isset($api_arry->{'latest_date'})) {
+				$date = new DateTime($api_arry->{'latest_date'});
+				return $date->format($format);
+			} else {
 				return '';
 			}
-		}
-		if (isset($api_arry->{'latest_date'})) {
-			$date = new DateTime($api_arry->{'latest_date'});
-			return $date->format($format);
-		}
-		else {
-			return '';
 		}
 	}
 }
@@ -636,4 +656,37 @@ function dec_awards($atts, $content = null){
 		}
 	}
 }
+function dec_awards($atts, $content = null){
+	extract(shortcode_atts(array('attributes'=>'tourism_awards','index'=>'','get'=>''), $atts));
+	global $api_arry;
+	$error= api_error_function();
+	if($error){
+		return $error;
+	}
+	else {
+        $attrs = [];
+        $attrs=$api_arry->$attributes;
 
+		if (count($attrs) > 0) {
+			//Check Index
+			if ($index == '') {
+				$result_string="<ul class='dec-awards'>";
+
+				foreach ($attrs as $attr) {
+					$result_string='<li>'.$attr->name.'</li>';
+				}
+				$result_string.="</ul>";
+				return $result_string;
+			}
+			else {
+				$get_string = "";
+				foreach ($get_array as $val) {
+					$get_string .=$attrs[$index]->$val.' ';
+				}
+				return $get_string;
+			}
+		} else {
+			return 'NOTHING';
+		}
+	}
+}

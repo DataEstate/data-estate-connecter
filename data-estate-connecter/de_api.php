@@ -51,7 +51,6 @@ class De_api {
 		$response = wp_remote_retrieve_body($request);
 		return json_decode($response);
 	}
-
 	public function assets($params=[], $id=null, $header=false) {
 		$endpoint='/assets/data';
 		$url = $this->_apiUrl.$endpoint;
