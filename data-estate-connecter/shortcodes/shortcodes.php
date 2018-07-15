@@ -656,4 +656,37 @@ function dec_awards($atts, $content = null){
 		}
 	}
 }
+function dec_awards($atts, $content = null){
+	extract(shortcode_atts(array('attributes'=>'tourism_awards','index'=>'','get'=>''), $atts));
+	global $api_arry;
+	$error= api_error_function();
+	if($error){
+		return $error;
+	}
+	else {
+        $attrs = [];
+        $attrs=$api_arry->$attributes;
 
+		if (count($attrs) > 0) {
+			//Check Index
+			if ($index == '') {
+				$result_string="<ul class='dec-awards'>";
+
+				foreach ($attrs as $attr) {
+					$result_string='<li>'.$attr->name.'</li>';
+				}
+				$result_string.="</ul>";
+				return $result_string;
+			}
+			else {
+				$get_string = "";
+				foreach ($get_array as $val) {
+					$get_string .=$attrs[$index]->$val.' ';
+				}
+				return $get_string;
+			}
+		} else {
+			return 'NOTHING';
+		}
+	}
+}
