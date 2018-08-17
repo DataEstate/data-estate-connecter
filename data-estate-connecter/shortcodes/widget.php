@@ -43,7 +43,6 @@ function dec_widget($atts, $content = null){
 	];
 	$error= api_error_function();
 	if($error){
-		//return $error;
 		return "";
 	}
 	else {
@@ -82,9 +81,6 @@ function dec_widget($atts, $content = null){
 		}
 		return $widget_script.$widget_div;
 	}
-}
-function dec_widget_element($atts, $content=null) {
-	
 }
 function dec_map_widget($atts, $content=null) {
 	extract(shortcode_atts(array('width'=>'100%', 'height'=>'100%', 'zoom'=>14, 'scrollwheel'=>false, 'detail_url'=>null, 'localities'=>null, 'states'=>null,'categories'=>null,'areas'=>null,'regions'=>null, 'size'=>200,"lat"=>"-25.274411", "lng"=>"133.775132", "radius"=>20), $atts));
@@ -295,7 +291,6 @@ function dec_assets($atts, $content=null) {
 	$resultString.='</div>';
 	return $resultString;
 }
-
 
 //Enclosing shortcode
 function dec_estates($atts, $content=null) {

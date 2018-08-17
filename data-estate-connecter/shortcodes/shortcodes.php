@@ -417,7 +417,7 @@ function dec_phone($atts, $content = null){
 
 /***Shortcode For Url  ****/
 function dec_url($atts, $content = null){
-	extract(shortcode_atts(array('urls'=>'urls','index'=>'','get'=>''), $atts));
+	extract(shortcode_atts(array('urls'=>'urls','index'=>''), $atts));
 	global $api_arry;
 	$error= api_error_function();
 
@@ -425,31 +425,32 @@ function dec_url($atts, $content = null){
 		return $error;
 	}
 	else {
-		if($index=='' && $get=='' ){
-			$result_string='http://'.str_replace("http://", "", $api_arry->urls[0]->address);
-			return $result_string;
-		}
-		else if($index!='' && $get==''){
-			return $api_arry->urls[$index];
-		}
-		else if($index=='' && $get!=''){
-			$multi_get=explode(",",$get);
-			$result_string = "";
-			foreach($multi_get as $val){
-				$result_string .= 'http://'.str_replace("http://", "", $api_arry->urls[0]->$val);
+		$result_string = "";
+		if (isset($api_arry->urls) && count($api_arry->urls)) {	
+			if ($index == 'all') {
+				$url_array = [];
+				foreach ($api_arry->urls as $url) {
+					if (strpos($api_arry->urls[0]->address, "http")) {
+						$url_array[] = $api_arry->urls[0]->address;
+					}
+					else {
+						$url_array[] = "http://".$api_arry->urls[0]->address;
+					}
+				}
+				return implode("<br>", $url_array);
 			}
-			return $result_string;
-		}
-		else {
-			$multi_get=explode(",",$get);
-			$result_string = "";
-			foreach($multi_get as $val){
-				$result_string .= $api_arry->urls[$index]->$val.' ';
-			}
-			$result_string='http://'.str_replace("http://", "", $result_string);
 
-			return $result_string;
+			else if ($index != '') {
+				$result_string=$api_arry->urls[$index]->address;
+			}
+			else {
+				$result_string=$api_arry->urls[0]->address;
+			}
+			if (strpos($result_string, "http")===false) {
+				$result_string = "http://".$result_string;
+			}
 		}
+		return $result_string;	
 	}
 }
 
@@ -574,9 +575,53 @@ function dec_txa_button($atts,$content=null) {
 
 }
 
+
+/***Shortcode For Event Notice  ****/
+function dec_event_notice($atts, $content=null) {
+	extract(shortcode_atts(array('frequency' => 'frequency'), $atts));
+	global $api_arry;
+
+	$error= api_error_function();
+	if($error){
+		return $error;
+	}
+	else {
+		if (isset($api_arry->{'info'}->{'frequency'})) {
+			$fr_id = $api_arry->{'info'}->{'frequency'};
+			$fr_text = "";
+			switch ($fr_id) {
+				case "ANNUAL":
+					$fr_text = "annually";
+					break;
+				case "BIANNUAL":
+					$fr_text = "biannually";
+					break;
+				case "BIENNIAL":
+					$fr_text = "biennially";
+					break;
+				case "DAILY":
+					$fr_text = "daily";
+					break;
+				case "FORTNIGHTLY":
+					$fr_text = "fortnightly";
+					break;
+				case "MONTHLY":
+					$fr_text = "monthly";
+					break;
+				case "QUARTERLY":
+					$fr_text = "quarterly";
+					break;
+				default:
+					return "";
+			}
+			return "<small>This event runs <b><u>".$fr_text."</u></b>. Please click through to their website for more dates.</small>";
+		}
+	}
+}
+
 /***Shortcode For Event Date  ****/
 function dec_event_date($atts, $content=null) {
-	extract(shortcode_atts(array('type' => 'list','format'=>'l, jS F Y', 'asEndDate'=>'false'), $atts));
+	extract(shortcode_atts(array('type' => 'list','format'=>'l, jS F Y','asEndDate'=>'false','showLatestDate'=>'false','qtyToShow'=>'1000'), $atts));
 	global $api_arry;
 	$date_default_format = "D, d/m/y";
 	$error= api_error_function();
@@ -586,19 +631,35 @@ function dec_event_date($atts, $content=null) {
 	else {
 		if ($type == 'list') {
 			$result_string="<ul class='dec-date'>";
+			$q = 0;				
 			foreach ($api_arry->{'info'}->{'dates'} as $event_date) {
-				$sdate = new DateTime($event_date->{'start_time'});
-				$edate = new DateTime($event_date->{'end_time'});
-				$stime_formatted = $sdate->format("H:i");
-				$etime_formatted = $edate->format("H:i");
-				if ($stime_formatted == "00:00" && $etime_formatted == "00:00") {
-					$sdate_str = $sdate->format($date_default_format);
-					$edate_str = $edate->format($date_default_format);
-				} else {
-					$sdate_str = $sdate->format($format);
-					$edate_str = $edate->format($format);
+
+				if ($q < $atts['qtytoshow']) {
+					$sdate = new DateTime($event_date->{'start_time'});
+					$edate = new DateTime($event_date->{'end_time'});
+					
+					$show_date = true;
+					if ($atts['showlatestdate'] == 'true') {
+						$sdate_timestamp = strtotime($event_date->{'start_time'});
+						if ($sdate_timestamp < time()) {
+							$show_date = false;
+						}
+					}
+					
+					if ($show_date == true) {
+						$stime_formatted = $sdate->format("H:i");
+						$etime_formatted = $edate->format("H:i");
+						if ($stime_formatted == "00:00" && $etime_formatted == "00:00") {
+							$sdate_str = $sdate->format($date_default_format);
+							$edate_str = $edate->format($date_default_format);
+						} else {
+							$sdate_str = $sdate->format($format);
+							$edate_str = $edate->format($format);
+						}
+						$result_string.= '<li>  '.$sdate_str.' - '.$edate_str.'</li>';
+						$q++;
+					}
 				}
-				$result_string.= '<li>'.$sdate_str.' - '.$edate_str.'</li>';
 			}
 			$result_string.="</ul>";
 			return $result_string;
@@ -632,7 +693,6 @@ function dec_awards($atts, $content = null){
 	else {
         $attrs = [];
         $attrs=$api_arry->$attributes;
-
 		if (count($attrs) > 0) {
 			//Check Index
 			if ($index == '') {
@@ -656,37 +716,26 @@ function dec_awards($atts, $content = null){
 		}
 	}
 }
-function dec_awards($atts, $content = null){
-	extract(shortcode_atts(array('attributes'=>'tourism_awards','index'=>'','get'=>''), $atts));
+
+function dec_hasproperty($atts, $content = null) {
+	extract(shortcode_atts(array('name'=>''), $atts));
 	global $api_arry;
 	$error= api_error_function();
 	if($error){
 		return $error;
 	}
 	else {
-        $attrs = [];
-        $attrs=$api_arry->$attributes;
-
-		if (count($attrs) > 0) {
-			//Check Index
-			if ($index == '') {
-				$result_string="<ul class='dec-awards'>";
-
-				foreach ($attrs as $attr) {
-					$result_string='<li>'.$attr->name.'</li>';
-				}
-				$result_string.="</ul>";
-				return $result_string;
+		$paths = explode(',', $name);
+		$cursor = $api_arry;
+		foreach ($paths as $path) {
+			if (isset($cursor->$path)) {
+				$cursor = $cursor->$path;
 			}
 			else {
-				$get_string = "";
-				foreach ($get_array as $val) {
-					$get_string .=$attrs[$index]->$val.' ';
-				}
-				return $get_string;
+				return "";
 			}
-		} else {
-			return 'NOTHING';
 		}
+		return $content;
 	}
 }
+
