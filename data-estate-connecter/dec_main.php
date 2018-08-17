@@ -1,8 +1,8 @@
 <?php
 /*
 
-Plugin Name: Data Estate Connecter	 
-Description: The Data Estate Connecter (DEC) plugin integrates your WordPress site with the Data Estate API gain access to various Estate content. The API supports accessing ATDW’s tourism data as long as you have a valid ATDW distributor API Key.
+Plugin Name: Data Estate Connector	 
+Description: The Data Estate Connector (DEC) plugin integrates your WordPress site with the Data Estate API gain access to various Estate content. The API supports accessing ATDW’s tourism data as long as you have a valid ATDW distributor API Key.
 Author: Data Estate
 Author URI: http://www.dataestate.com.au
 Version: 1.6.1
@@ -43,7 +43,7 @@ function dec_install() {
 		require_once(ABSPATH . '/wp-admin/upgrade-functions.php');
 		dbDelta($sql0);
 		$sql = "INSERT INTO `".DEC_TABLE_DETAILS."`(`api_base_url`,`api_end_point`,`api_key`,`main_estate_id`,`type`) 
-				VALUES ('http://api-uat.dataestate.net/v2','estates/data/','','','de')";
+				VALUES ('https://api.dataestate.net/v2','estates/data/','','','de')";
 		$da_value=$wpdb->query($wpdb->prepare($sql, array($api_end_point,$api_key)));
 		//TODO... Refactor this
 		$sql = "INSERT INTO `".DEC_TABLE_DETAILS."`(`api_base_url`,`api_end_point`,`api_key`,`main_estate_id`,`type`) 
@@ -151,6 +151,9 @@ add_shortcode('dec-awarded-estates', 'dec_awarded_estates');
 add_shortcode('dec-condition', 'dec_condition');
 add_shortcode('dec-ifnot-empty', 'dec_ifnot_empty');
 add_shortcode('dec-hasproperty', 'dec_hasproperty');
+add_shortcode('dec-event-notice', 'dec_event_notice');
+add_shortcode('dec-event-frequency', 'dec_frequency');
+add_shortcode('dec-for-categories', 'dec_for_categories');
 // add_shortcode('dec-search-categories', 'dec_search_cats');
 require_once 'de_api.php';
 require_once 'functions.php';

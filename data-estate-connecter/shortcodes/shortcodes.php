@@ -58,6 +58,9 @@ function dec_address($atts, $content = null){
 			$multi_get=explode(",",$get);
 			//TODO
 			$result_string = "";
+			if ($type=='') {
+				$type='PHYSICAL';
+			}
 			foreach($multi_get as $val){
 				// this is not working as $type is not assigned
 				$result_string .= $api_arry->$address->$type->$val.' ';
@@ -577,6 +580,49 @@ function dec_txa_button($atts,$content=null) {
 
 
 /***Shortcode For Event Notice  ****/
+function dec_frequency($atts, $content=null) {
+	extract(shortcode_atts(array('as_id' => ''), $atts));
+	global $api_arry;
+	$error= api_error_function();
+	if($error){
+		return $error;
+	}
+	else {
+		if (isset($api_arry->{'info'}->{'frequency'})) {
+			$fr_id = $api_arry->{'info'}->{'frequency'};
+			if ($as_id=='true' || $as_id===true) {
+				return $fr_id;
+			}
+			$fr_text = "";
+			switch ($fr_id) {
+				case "ANNUAL":
+					$fr_text = "annually";
+					break;
+				case "BIANNUAL":
+					$fr_text = "biannually";
+					break;
+				case "BIENNIAL":
+					$fr_text = "biennially";
+					break;
+				case "DAILY":
+					$fr_text = "daily";
+					break;
+				case "FORTNIGHTLY":
+					$fr_text = "fortnightly";
+					break;
+				case "MONTHLY":
+					$fr_text = "monthly";
+					break;
+				case "QUARTERLY":
+					$fr_text = "quarterly";
+					break;
+				default:
+					return "";
+			}
+			return $fr_text;
+		}
+	}
+}
 function dec_event_notice($atts, $content=null) {
 	extract(shortcode_atts(array('frequency' => 'frequency'), $atts));
 	global $api_arry;
@@ -633,7 +679,6 @@ function dec_event_date($atts, $content=null) {
 			$result_string="<ul class='dec-date'>";
 			$q = 0;				
 			foreach ($api_arry->{'info'}->{'dates'} as $event_date) {
-
 				if ($q < $atts['qtytoshow']) {
 					$sdate = new DateTime($event_date->{'start_time'});
 					$edate = new DateTime($event_date->{'end_time'});
@@ -647,6 +692,7 @@ function dec_event_date($atts, $content=null) {
 					}
 					
 					if ($show_date == true) {
+						//Hide time if it's at midnight. 
 						$stime_formatted = $sdate->format("H:i");
 						$etime_formatted = $edate->format("H:i");
 						if ($stime_formatted == "00:00" && $etime_formatted == "00:00") {
@@ -656,7 +702,13 @@ function dec_event_date($atts, $content=null) {
 							$sdate_str = $sdate->format($format);
 							$edate_str = $edate->format($format);
 						}
-						$result_string.= '<li>  '.$sdate_str.' - '.$edate_str.'</li>';
+						//Hide end dates if it's the same as start date. 
+						if ($sdate_str == $edate_str) {
+							$result_string.='<li>'.$sdate_str.'</li>';
+						}
+						else {
+							$result_string.= '<li> '.$sdate_str.' - '.$edate_str.'</li>';
+						}
 						$q++;
 					}
 				}
@@ -716,7 +768,6 @@ function dec_awards($atts, $content = null){
 		}
 	}
 }
-
 function dec_hasproperty($atts, $content = null) {
 	extract(shortcode_atts(array('name'=>''), $atts));
 	global $api_arry;
@@ -725,7 +776,7 @@ function dec_hasproperty($atts, $content = null) {
 		return $error;
 	}
 	else {
-		$paths = explode(',', $name);
+		$paths = explode('.', $name);
 		$cursor = $api_arry;
 		foreach ($paths as $path) {
 			if (isset($cursor->$path)) {
@@ -736,6 +787,23 @@ function dec_hasproperty($atts, $content = null) {
 			}
 		}
 		return $content;
+	}
+}
+function dec_for_categories($atts, $content = null) {
+	extract(shortcode_atts(array('categories'=>''), $atts));
+	global $api_arry;
+	$error= api_error_function();
+	if($error){
+		return $error;
+	}
+	else {
+		$cats = explode(',', $categories);
+		if (in_array($api_arry->category_code, $cats)) {
+			return $content;
+		}
+		else {
+			return "";
+		}
 	}
 }
 
