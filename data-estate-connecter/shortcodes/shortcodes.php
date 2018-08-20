@@ -346,7 +346,7 @@ function dec_images($atts, $content = null){
 
 /***Shortcode For gallery ****/
 function dec_gallery($atts, $content = null) {
-	extract(shortcode_atts(array('images'=>'images', 'lightbox'=>'true'), $atts));
+	extract(shortcode_atts(array('images'=>'images', 'lightbox'=>'true', 'thumb_height'=>'300', 'img_height'=>'1200'), $atts));
 	global $api_arry;
 	$error= api_error_function();
 
@@ -362,9 +362,9 @@ function dec_gallery($atts, $content = null) {
 		if (!is_null($img_objects)) {
 			$result="<div class='dec-gallery'>";
 			foreach ($img_objects as $img_obj) {
-				$img_string = "<img src='".$img_obj->path."?h=150' alt='".$img_obj->alt."'>";
+				$img_string = "<img src='".$img_obj->path."?h=".$thumb_height." alt='".$img_obj->alt."'>";
 				if ($lightbox==true && $lightbox=="true") {
-					$result.='<a href="'.$img_obj->path.'?w=600" data-title="'.$img_obj->alt.'" data-lightbox="dec-gallery">'.$img_string."</a>";
+					$result.='<a href="'.$img_obj->path.'?w="'.$img_height.'" data-title="'.$img_obj->alt.'" data-lightbox="dec-gallery">'.$img_string."</a>";
 				}
 				else {
 					$result.="<div>".$img_string."</div>";
