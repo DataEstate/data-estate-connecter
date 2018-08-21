@@ -1,5 +1,6 @@
 <?php 
 
+include_once('Parsedown.php');
 class Git_Updater {
 	protected $file;
 	protected $plugin;
@@ -9,9 +10,11 @@ class Git_Updater {
 	private $git_username;
 	private $repo;
 	private $github_response;
+	private $parsedown;
 
 	public function __construct($file) {
 		$this->file = $file;
+		$this->parsedown = new Parsedown();
 		add_action('admin_init', [$this, 'set_plugin_properties']);
 		return $this;
 	}
@@ -31,12 +34,10 @@ class Git_Updater {
 
 	private function get_repository_info() {
 		if (is_null($this->github_response)) {
-			$request_url = sprintf('https://api.github.com/repos/%s/%s/releases', $this->git_username, $this->repo);
+			$request_url = sprintf('https://api.github.com/repos/%s/%s/releases/latest', $this->git_username, $this->repo);
 			$raw_response =wp_remote_retrieve_body(wp_remote_get($request_url)); 
+	
 			$response = json_decode($raw_response, true);
-			if (is_array($response)) {
-				$response = current($response);
-			}
 			$this->github_response = $response;
 		}
 	}
@@ -69,9 +70,11 @@ class Git_Updater {
 	}
 	public function plugin_popup( $result, $action, $args ) {
 		if( ! empty( $args->slug ) ) { // If there is a slug	
+			wp_register_style( 'update-style', DEC_URL . '/css/update-style.css' );
+			wp_enqueue_style( 'update-style' );
 			if( $args->slug == current( explode( '/' , $this->basename ) ) ) { // And it's our slug
 				$this->get_repository_info(); // Get our repo info
-
+				$short_description = $this->parsedown->text($this->github_response['body']);
 				// Set it to an array
 				$plugin = array(
 					'name'				=> $this->plugin["Name"],
@@ -85,10 +88,10 @@ class Git_Updater {
 					'author_profile'	=> $this->plugin["AuthorURI"],
 					'last_updated'		=> $this->github_response['published_at'],
 					'homepage'			=> $this->plugin["PluginURI"],
-					'short_description' => $this->plugin["Description"],
+					'short_description' => $short_description,
 					'sections'			=> array(
 						'Description'	=> $this->plugin["Description"],
-						'Updates'		=> $this->github_response['body'],
+						'Updates'		=> $short_description,
 					),
 					'download_link'		=> $this->github_response['zipball_url']
 				);
