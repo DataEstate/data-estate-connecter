@@ -1,5 +1,5 @@
 # dataestate-connecter
-v1.5.5
+v1.6.1
 Data Estate Connecter WordPress plugin is a WordPress plugin used to connect with Data Estate. Anyone can install the plugin, but it won't work without a valid Data Estate API Key. 
 
 ## Installation
