@@ -11,7 +11,7 @@ License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 
 Settings: link to the settings page. 
 */
-
+include_once(plugin_dir_path(__FILE__).'/lib/github_updater.php');
 $siteurl = get_option('siteurl');
 define('DEC_FOLDER', dirname(plugin_basename(__FILE__)));
 define('DEC_URL', $siteurl . '/wp-content/plugins/' . DEC_FOLDER);
@@ -24,6 +24,12 @@ define('DEC_TABLE_DETAILS', $table_prefix . 'dec_details');
 register_activation_hook(__FILE__, 'dec_install');
 register_deactivation_hook(__FILE__, 'dec_deactivate');
 register_uninstall_hook(__FILE__, 'dec_uninstall');
+
+//Plugin updater. 
+$updater = new Git_Updater(__FILE__);
+$updater->set_username('DataEstate');
+$updater->set_repository('dataestate-connector');
+$updater->init();
 
 function dec_install() {		
 	global $wpdb;
