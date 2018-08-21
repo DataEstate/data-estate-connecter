@@ -58,13 +58,13 @@ function dec_install() {
 	}
 }
 function dec_deactivate() {
+}
+
+function dec_uninstall() {
 	global $wpdb;
 	$api_details = DEC_TABLE_DETAILS;
 	$del_albums = "DROP TABLE IF EXISTS `".$api_details. "`";
-	$wpdb->query($wpdb->prepare($del_albums));
-}
-
-function dec_uninstall() {     
+	$wpdb->query($wpdb->prepare($del_albums)); 
 }
 //Add settings to menu
 function my_plugin_menu() {

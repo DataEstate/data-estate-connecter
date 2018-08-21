@@ -14,6 +14,7 @@ if(isset($_POST['api_detail_submit'])){
 		$api_base_url = $_POST['api_base_url'];
 		$api_end_point = $_POST['api_end_point'];
 		$api_key = $_POST['api_key'];
+		$main_estate = $_POST['estate_id'];
 
 		// /** Category alias **/
 		// $cat_accomm = $_POST['cat_map_accomm'];
@@ -23,7 +24,8 @@ if(isset($_POST['api_detail_submit'])){
 		$data = array( 
 			'api_base_url' => $api_base_url, 
 			'api_end_point' => $api_end_point, 
-			'api_key' => $api_key
+			'api_key' => $api_key,
+			'main_estate_id' => $main_estate
 		);
 		$where = array('id'=>1);
 
@@ -52,6 +54,7 @@ $myrows = $wpdb->get_results( "SELECT * FROM `".DEC_TABLE_DETAILS."`" );
 $api_base_url_1 = $myrows[0]->api_base_url;
 $api_end_point_1= $myrows[0]->api_end_point;
 $api_key_1= $myrows[0]->api_key;
+$estate_id_1 = $myrows[0]->main_estate_id;
 //TODO: Refactor this to be more flexible. 
 if (isset($myrows[1])) {
 	$gmap_key_1 = $myrows[1]->api_key;
