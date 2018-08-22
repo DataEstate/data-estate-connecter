@@ -3,7 +3,7 @@ v1.6.1
 Data Estate Connecter WordPress plugin is a WordPress plugin used to connect with Data Estate. Anyone can install the plugin, but it won't work without a valid Data Estate API Key. 
 
 ## Installation
-There is currently no official plugin download page, and this plugin is not available in the WordPress plugin directory due to the fact that it's still under development and that it only has limit usage (clients of Data Estate). Best way to install then, is to download the repository from the most recent [release (v1.6.1)](https://github.com/DataEstate/dataestate-connecter/archive/latest) and copy the whole **data-estate-connector folder** into your WordPress's plugin folder (**wp-content/plugins/**). After that, go into WordPress Admin -> plugins and activate the plugin. 
+Download the release package from the release page. The latest release is [release (v1.6.1)](https://github.com/DataEstate/dataestate-connecter/archive/latest). Please note that you will need a Data Estate account to be able to use this plugin. After you've downloaded the plugin, unzip it in your WordPress plugin folder (wp-content/plugins) or go to you WordPress admin page -> plugins -> Add New and then upload plugin. 
 
 ## Configuration
 After activation, some configurations are needed before the plugin can be used. Details of it can be seen in the settings page. Settings can be found under **Settings->DEC Config**
