@@ -396,14 +396,13 @@ function dec_estates($atts, $content=null) {
 	}
 }
 
-
 //if output is empty
 function dec_ifnot_empty($atts, $content=null) {
 	extract(shortcode_atts([
 		'field'=>''
 	], $atts));
 	if (strlen($field) > 0) {
-		return $content;
+		return do_shortcode($content);
 	} else {
 		return '';
 	}
@@ -487,7 +486,7 @@ function dec_condition($atts, $content=null) {
 	switch ($target) {
 		case '':
 			if (eval_condition($if)) {
-				return $content;
+				return do_shortcode($content);
 			}
 			else {
 				return "";
@@ -499,7 +498,7 @@ function dec_condition($atts, $content=null) {
 				return "";
 			}
 			else {
-				return $content;
+				return do_shortcode($content);
 			}
 			break;
 			//$if is an estate field in this. 

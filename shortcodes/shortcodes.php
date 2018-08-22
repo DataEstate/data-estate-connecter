@@ -786,7 +786,7 @@ function dec_hasproperty($atts, $content = null) {
 				return "";
 			}
 		}
-		return $content;
+		return do_shortcode($content);
 	}
 }
 function dec_for_categories($atts, $content = null) {
@@ -799,7 +799,7 @@ function dec_for_categories($atts, $content = null) {
 	else {
 		$cats = explode(',', $categories);
 		if (in_array($api_arry->category_code, $cats)) {
-			return $content;
+			return do_shortcode($content);
 		}
 		else {
 			return "";
