@@ -84,7 +84,7 @@
 				<div class="col-md-6 col-sm-6 col-xs-12">
 					<label for="api_key">Your Api Key</label>
 					<div class="form-group">
-						<input type="text" placeholder="Enter Your Api Key" name="api_key" id="api_key"  class="form-control" required autocomplete="off" value="<?php echo $api_key_1;?>">
+						<input type="password" placeholder="Enter Your Api Key" name="api_key" id="api_key"  class="form-control" required autocomplete="off" value="<?php echo $api_key_1;?>">
 					</div>
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12">

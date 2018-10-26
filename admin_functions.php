@@ -19,7 +19,6 @@ if(isset($_POST['api_detail_submit'])){
 		// /** Category alias **/
 		// $cat_accomm = $_POST['cat_map_accomm'];
 		// /** end category alias **/
-
 		/** Add DE API INFO **/
 		$data = array( 
 			'api_base_url' => $api_base_url, 

@@ -15,12 +15,14 @@ function dec_name($atts, $content = null){
 /***Shortcode For Name ****/
 function atdw_beacon($atts, $content=null) {
 	global $api_arry;
+	$de_api=De_api::get_instance();
+	$apikey = $de_api->get_api_key();
 	$error=api_error_function();
 	if ($error) {
 		return $error;
 	}
 	else {
-		$beacon_url='http://atlas.atdw-online.com.au/pixel?distributorId=56b1eb9444feca3df2e32101&language=en&syndicationMethod=API';
+		$beacon_url="http://atlas.atdw-online.com.au/pixel?distributorId=$apikey&language=en&syndicationMethod=API";
 		$beacon_string='<img src="'.$beacon_url.'&productId='.$api_arry->id.'" alt="atdw web beacon" style="width:0px;height:0px">';
 		return $beacon_string;
 	}
