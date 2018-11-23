@@ -5,7 +5,7 @@ Plugin Name: Data Estate Connector
 Description: The Data Estate Connector (DEC) plugin integrates your WordPress site with the Data Estate API gain access to various Estate content. The API supports accessing ATDW’s tourism data as long as you have a valid ATDW distributor API Key.
 Author: Data Estate
 Author URI: http://www.dataestate.com.au
-Version: 1.6.1
+Version: 1.6.2
 License:           GPL-2.0+
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 

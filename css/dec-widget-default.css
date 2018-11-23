@@ -1,0 +1,73 @@
+/** 
+* dec widget default CSS
+*/
+#dewid {
+    padding: 20px;
+    background-color: rgba(0,0,0,0.03);
+    box-shadow: 0px 2px 6px #00000030;
+    margin-bottom: 20px;
+}
+input.dewid-keyword {
+    width: 80%;
+    padding: 10px;
+    font-size:14px;
+}
+.dewid-btn {
+    border-radius: 0px;
+    background-color: white;
+    border: 1px solid #bbb;
+    padding: 10px 15px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+.dewid-btn:hover {
+	background-color: rgba(0,0,0,0.5);
+	border-color: rgba(0,0,0,0.5);
+	color: white;
+	cursor: pointer;
+}
+#dewid-search-result {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.dewid-result-item {
+    flex-basis: 32.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.34);
+    margin-bottom: 10px;
+}
+.dewid-image {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 250px;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+}
+.dewid-content {
+	flex-grow: 1;
+	padding-top: 10px;
+}
+.dewid-action {
+    align-self: flex-start;
+    margin-bottom: 15px;
+}
+.dewid-rate {
+    position: absolute;
+    color: white;
+    font-size: 24px;
+    right: 15px;
+    top: 215px;
+    font-weight: bold;
+}
+.dewid-image {
+	width: 100%;
+	max-width:100%;
+}
+.dewid-content, .dewid-action {
+	width:92%;
+}
