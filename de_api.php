@@ -46,7 +46,6 @@ class De_api {
 				$url.='?'.http_build_query($params);
 			}
 		}
-		//echo $url;
 		$request = wp_remote_get($url);
 		$response = wp_remote_retrieve_body($request);
 		return json_decode($response);

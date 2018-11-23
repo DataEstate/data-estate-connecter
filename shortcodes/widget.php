@@ -2,6 +2,7 @@
 /**
 *
 * @author Data Estate
+* @version 1.6.2
 *
 */
 /** Shortcode for Data Estate Search Widget **/
@@ -418,7 +419,12 @@ function dec_awarded_estates($atts, $content=null) {
 	$queryParams=[];
 	foreach ($atts as $aKey => $aVal) {
 		if ($aVal !='' && !in_array($aKey, ['template_keys', 'shortcode_content'])) {
-			$queryParams[$aKey]=$aVal;
+			if ($aKey == "category") {
+				$queryParams["award_category"] = $aVal;
+			}
+			else {
+				$queryParams[$aKey]=$aVal;
+			}
 		}
 	}
 	$deAwardGroups = $deApi->estates($queryParams, null, 'winners');
