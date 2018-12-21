@@ -48,7 +48,14 @@ class De_api {
 		}
 		$request = wp_remote_get($url);
 		$response = wp_remote_retrieve_body($request);
-		return json_decode($response);
+		$estates = json_decode($response);
+		//Don't process it if ID is not null, because it'll return a single estate. 
+		if (!empty($estates) && is_null($id)) {
+			foreach ($estates as &$estate) {
+				$this->process_estate($estate);
+			}
+		}
+		return $estates;
 	}
 	public function assets($params=[], $id=null, $header=false) {
 		$endpoint='/assets/data';
@@ -76,7 +83,20 @@ class De_api {
 			$response = wp_remote_retrieve_body($request);
 			return json_decode($response);
 		}
-
+	}
+	private function process_estate(&$estate) {
+		if (isset($estate->urls)) {
+			foreach ($estate->urls as &$url) {
+				if (isset($url->address) && strpos($url->address, "http") === false) {
+					$url->address = "http://".$url->address;
+				}
+			}
+		}
+		else if (isset($estate->estates)) {
+			foreach ($estate->estates as &$award_estate) {
+				$this->process_estate($award_estate);
+			}
+		}
 	}
 	public static function get_instance($api_key=null, $api_url=null, $estate_id = null) {
 		if (null==self::$_instance)  {

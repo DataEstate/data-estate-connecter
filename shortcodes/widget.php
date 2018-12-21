@@ -431,48 +431,50 @@ function dec_awarded_estates($atts, $content=null) {
 	$templateKeys=explode(",", $template_keys);
 	$resultString.='<div class="de-award-group">';
 	//Award Group
-	foreach ($deAwardGroups as $awardGroup) {
-		if (isset($awardGroup->name)) {
-				$resultString.='<h3 class="de-award-name">'.$awardGroup->name.'</h3>';
-		}
-		$resultString.='<div class="de-description-group">';
-		if (isset($awardGroup->description) || isset($awardGroup->year)) {
-			$resultString.='<div class="de-award-details">';
-			if (isset($awardGroup->year)) {
-				$resultString.='<span class="de-award-year">'.$awardGroup->year.'</span>';
+	if (!empty($deAwardGroups)) {
+		foreach ($deAwardGroups as $awardGroup) {
+			if (isset($awardGroup->name)) {
+					$resultString.='<h3 class="de-award-name">'.$awardGroup->name.'</h3>';
 			}
-			if (isset($awardGroup->description)) {
-				$resultString.='<span class="de-award-category">'.$awardGroup->description.'</span>';
+			$resultString.='<div class="de-description-group">';
+			if (isset($awardGroup->description) || isset($awardGroup->year)) {
+				$resultString.='<div class="de-award-details">';
+				if (isset($awardGroup->year)) {
+					$resultString.='<span class="de-award-year">'.$awardGroup->year.'</span>';
+				}
+				if (isset($awardGroup->description)) {
+					$resultString.='<span class="de-award-category">'.$awardGroup->description.'</span>';
+				}
+				$resultString.='</div>';
+			}
+			if (isset($awardGroup->estates)) {
+				foreach ($awardGroup->estates as $estate) {
+					$varArray=[];
+					foreach ($templateKeys as $key) {
+						$key = str_replace("$", "", $key);
+						//Split into sections
+						$keyParts = explode(".", $key);
+						$val = (array)$estate;
+						foreach ($keyParts as $keyPart) {
+							if (is_array($val)) {
+								if (isset($val[$keyPart])) {
+									$val = $val[$keyPart];
+									if (is_object($val)) {
+										$val=(array)$val;
+									}
+								}
+								else {
+									$val="";
+								}
+							}
+						}
+						$varArray[] = $val;
+					}
+					$resultString .= str_replace($templateKeys, $varArray, $content);
+				}
 			}
 			$resultString.='</div>';
 		}
-		if (isset($awardGroup->estates)) {
-			foreach ($awardGroup->estates as $estate) {
-				$varArray=[];
-				foreach ($templateKeys as $key) {
-					$key = str_replace("$", "", $key);
-					//Split into sections
-					$keyParts = explode(".", $key);
-					$val = (array)$estate;
-					foreach ($keyParts as $keyPart) {
-						if (is_array($val)) {
-							if (isset($val[$keyPart])) {
-								$val = $val[$keyPart];
-								if (is_object($val)) {
-									$val=(array)$val;
-								}
-							}
-							else {
-								$val="";
-							}
-						}
-					}
-					$varArray[] = $val;
-				}
-				$resultString .= str_replace($templateKeys, $varArray, $content);
-			}
-		}
-		$resultString.='</div>';
 	}
 	$resultString.='</div>';
 	if ($shortcode_content=='false' || $shortcode_content=='') {
