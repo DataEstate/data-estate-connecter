@@ -2,7 +2,7 @@
 /**
 *
 * @author Data Estate
-* @version 1.6.2
+* @version 1.6.3
 *
 */
 /** Shortcode for Data Estate Search Widget **/
@@ -83,6 +83,7 @@ function dec_widget($atts, $content = null){
 		return $widget_script.$widget_div;
 	}
 }
+//Display a Google Map with provided information. 
 function dec_map_widget($atts, $content=null) {
 	extract(shortcode_atts(array('width'=>'100%', 'height'=>'100%', 'zoom'=>14, 'scrollwheel'=>false, 'detail_url'=>null, 'localities'=>null, 'states'=>null,'categories'=>null,'areas'=>null,'regions'=>null, 'size'=>200,"lat"=>"-25.274411", "lng"=>"133.775132", "radius"=>20), $atts));
 	wp_enqueue_script('dec-google-map', false, [], false, true);
@@ -292,7 +293,6 @@ function dec_assets($atts, $content=null) {
 	$resultString.='</div>';
 	return $resultString;
 }
-
 //Enclosing shortcode
 function dec_estates($atts, $content=null) {
 	extract(shortcode_atts(['fields'=>'', 'size'=>20,'sort'=>'name','category_code'=>'',
@@ -502,7 +502,7 @@ function dec_condition($atts, $content=null) {
 			break;
 		case 'estate':
 			global $api_arry;
-			if (get_field($api_arry, $if)=="") {
+			if (get_object_field($api_arry, $if)=="") {
 				return "";
 			}
 			else {
@@ -522,7 +522,10 @@ function eval_condition($conditionString) {
 }
 
 //Get PATH, TODO: Helper
-function get_field($object=[], $pathString="", $default="") {
+/**
+ * OBSOLETE
+ */
+function get_object_field($object=[], $pathString="", $default="") {
 	$keyParts = explode(".", $pathString);
 	$val = (array)$object; //Use Array if object
 	foreach ($keyParts as $keyPart) {
@@ -540,13 +543,19 @@ function get_field($object=[], $pathString="", $default="") {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
+//SELF INIT
+function init_widget_shortcodes() {
+	/** Widget related shortcodes **/
+	add_shortcode('dec-widget', 'dec_widget');
+	add_shortcode('dec-map-widget', 'dec_map_widget');
+	add_shortcode('dec-assets', 'dec_assets');
+	add_shortcode('dec-estates', 'dec_estates');
+	add_shortcode('dec-awarded-estates', 'dec_awarded_estates');
+	add_shortcode('dec-condition', 'dec_condition');
+	add_shortcode('dec-ifnot-empty', 'dec_ifnot_empty');
+	add_shortcode('dec-hasproperty', 'dec_hasproperty');
+	add_shortcode('dec-event-notice', 'dec_event_notice');
+	add_shortcode('dec-event-frequency', 'dec_frequency');
+	add_shortcode('dec-for-categories', 'dec_for_categories');
+}
+init_widget_shortcodes();

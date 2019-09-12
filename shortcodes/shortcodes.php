@@ -809,3 +809,27 @@ function dec_for_categories($atts, $content = null) {
 	}
 }
 
+function init_dec_shortcodes() {
+	add_shortcode('dec-name', 'dec_name');
+	add_shortcode('dec-description', 'dec_description');
+	add_shortcode('dec-address', 'dec_address');
+	add_shortcode('dec-attributes', 'dec_attributes');
+	add_shortcode('dec-phone', 'dec_phone');
+	add_shortcode('dec-email', 'dec_email');
+	add_shortcode('dec-url', 'dec_url');
+	add_shortcode('dec-images', 'dec_images');
+	add_shortcode('dec-gallery', 'dec_gallery');
+	add_shortcode('dec-subtypes', 'dec_subtypes');
+	add_shortcode('dec-category', 'dec_category');
+	add_shortcode('dec-location', 'dec_location');
+	add_shortcode('dec-star-rating', 'dec_star_rating');
+	add_shortcode('dec-event-date', 'dec_event_date');
+	add_shortcode('dec-txa-button', 'dec_txa_button');
+	add_shortcode('dec-rate', 'dec_rate');
+	add_shortcode('dec-rooms', 'dec_rooms');
+	add_shortcode('dec-awards', 'dec_awards');
+	add_shortcode('atdw-beacon', 'atdw_beacon');
+}
+
+//Self Initialisation
+init_dec_shortcodes();
